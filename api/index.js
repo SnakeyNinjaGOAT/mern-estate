@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
+// Routes
+import userRouter from "./routes/user.route.js";
+
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
@@ -19,3 +22,5 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`The server is currently listening on PORT: ${PORT}!`);
 });
+
+app.use("/api/user", userRouter);
