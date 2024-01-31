@@ -31,7 +31,7 @@ const SignUp = () => {
       if (data.success === false) {
         setLoading(false);
         setError(data.message);
-        console.log("Error 1");
+
         return;
       }
       console.log("Works");
@@ -78,9 +78,9 @@ const SignUp = () => {
         </button>
       </form>
       <div className="flex gap-2 mt-5">
-        <p>Have an account?</p>
+        <p>Already have an account?</p>
         <Link to="/sign-in">
-          <span className="text-blue-700">Sign In</span>
+          <span className="text-blue-700">Sign In!</span>
         </Link>
       </div>
       {error && <p className="text-red-500">{error}</p>}
