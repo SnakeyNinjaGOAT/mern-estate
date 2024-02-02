@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getStorage,
@@ -150,7 +150,7 @@ const Profile = () => {
           accept="image/*"
         />
         <img
-          src={formData.avatar || currentUser?.avatar}
+          src={formData.avatar || currentUser.avatar}
           alt="profile"
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
           onClick={() => {
@@ -202,6 +202,12 @@ const Profile = () => {
         >
           {loading ? "Loading..." : "Update"}
         </button>
+        <Link
+          to="/create-listing"
+          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
+        >
+          Create Listing
+        </Link>
       </form>
       <div className="flex justify-between my-5">
         <span
