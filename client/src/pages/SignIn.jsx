@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
@@ -11,6 +11,7 @@ import { OAuth } from "../components";
 const SignIn = () => {
   const [formData, setFormData] = useState({});
   const { loading, error } = useSelector((state) => state.user);
+  const location = useLocation();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -50,6 +51,11 @@ const SignIn = () => {
   return (
     <div className="max-w-lg p-3 mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Sign In</h1>
+      {location.state.message && (
+        <p className="text-green-700 my-5 text-center">
+          {location.state.message}
+        </p>
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="email"
