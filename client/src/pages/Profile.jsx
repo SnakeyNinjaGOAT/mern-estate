@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getStorage,
@@ -11,6 +12,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -20,8 +24,9 @@ const Profile = () => {
   const [filePercent, setFilePercent] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const dispatch = useDispatch();
   const [updateSuccess, setUpdateSuccess] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -78,6 +83,29 @@ const Profile = () => {
     );
   };
 
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+      }
+
+      dispatch(deleteUserSuccess(data));
+      navigate("/sign-up", {
+        state: { message: "Account has been successfully deleted." },
+      });
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
+
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
@@ -98,7 +126,7 @@ const Profile = () => {
           accept="image/*"
         />
         <img
-          src={formData.avatar || currentUser.avatar}
+          src={formData.avatar || currentUser?.avatar}
           alt="profile"
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
           onClick={() => {
@@ -123,7 +151,7 @@ const Profile = () => {
         <input
           type="text"
           placeholder="username"
-          defaultValue={currentUser.username}
+          defaultValue={currentUser?.username}
           className="border p-3 rounded-lg"
           id="username"
           onChange={handleChange}
@@ -131,7 +159,7 @@ const Profile = () => {
         <input
           type="email"
           placeholder="email"
-          defaultValue={currentUser.email}
+          defaultValue={currentUser?.email}
           className="border p-3 rounded-lg"
           id="email"
           onChange={handleChange}
@@ -152,7 +180,12 @@ const Profile = () => {
         </button>
       </form>
       <div className="flex justify-between my-5">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span
+          onClick={handleDeleteUser}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete Account
+        </span>
         <span className="text-red-700 cursor-pointer">Sign out</span>
       </div>
       {error && <p className="text-red-700 mt-5">{error}</p>}
